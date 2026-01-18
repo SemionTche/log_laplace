@@ -53,8 +53,13 @@ class LoggerLHC:
         self.date_folder.mkdir(parents=True, exist_ok=True)
 
         self.log_file = self.date_folder / f"{app_name}.log"
-        self.logger = logging.getLogger(app_name)
-        self.logger.setLevel(logging.DEBUG)  # capture everything internally
+        # self.logger = logging.getLogger()
+        # self.logger.setLevel(logging.DEBUG)  # capture everything internally
+
+        self.root_logger = logging.getLogger()
+        self.root_logger.setLevel(logging.DEBUG)
+
+        self.logger = logging.getLogger(f"{app_name}")
 
         # Set up handlers
         self._setup_handlers(file_level, console_level)
@@ -66,51 +71,60 @@ class LoggerLHC:
 
     def _setup_handlers(self, file_level: str, console_level: str):
         """Setup file and console handlers with independent levels."""
-        fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
+        fmt = logging.Formatter("%(asctime)s [%(levelname)s] [%(name)s] %(message)s", "%Y-%m-%d %H:%M:%S")
 
         # File handler
         fh = logging.FileHandler(self.log_file, mode='a', encoding='utf-8')
         fh.setLevel(getattr(logging, file_level.upper(), logging.DEBUG))
         fh.setFormatter(fmt)
-        self.logger.addHandler(fh)
+        # self.logger.addHandler(fh)
+        self.root_logger.addHandler(fh)
 
         # Console handler
         ch = logging.StreamHandler(sys.stdout)
         ch.setLevel(getattr(logging, console_level.upper(), logging.INFO))
         ch.setFormatter(fmt)
-        self.logger.addHandler(ch)
+        # self.logger.addHandler(ch)
+        self.root_logger.addHandler(ch)
 
     def _capture_prints(self):
         """Redirect Python prints to console always, but avoid double logging."""
         class StreamToLogger:
+            
             def __init__(self, logger, stream=None):
                 self.logger = logger
                 self.stream = stream or sys.__stdout__  # original stdout/stderr
+            
             def write(self, message):
                 message = message.rstrip()
-                if message:
-                    # Write to the original console always
-                    self.stream.write(message + "\n")
-                    self.stream.flush()
-                    
+                if not message:
+                    return
+                
+                # Write to the original console always
+                self.stream.write(message + "\n")
+                self.stream.flush()
+                
+                self.logger.info(message)
                     # Only log to file (skip console handler)
-                    for h in self.logger.handlers:
-                        if isinstance(h, logging.FileHandler):
-                            h.emit(logging.LogRecord(
-                                name=self.logger.name,
-                                level=logging.INFO,
-                                pathname="",
-                                lineno=0,
-                                msg=message,
-                                args=None,
-                                exc_info=None
-                            ))
+                    # for h in logging.getLogger().handlers:
+                    #     if isinstance(h, logging.FileHandler):
+                    #         # h.emit(logging.LogRecord(
+                    #         #     name=self.logger.name,
+                    #         #     level=logging.INFO,
+                    #         #     pathname="",
+                    #         #     lineno=0,
+                    #         #     msg=message,
+                    #         #     args=None,
+                    #         #     exc_info=None
+                    #         # ))
+                    #         self.logger.log(logging.INFO, message)
+            
             def flush(self):
                 if self.stream:
                     self.stream.flush()
 
-        sys.stdout = StreamToLogger(self.logger)
-        sys.stderr = StreamToLogger(self.logger)
+        sys.stdout = StreamToLogger(self.root_logger)
+        sys.stderr = StreamToLogger(self.root_logger)
 
     # Shortcut methods
     def info(self, msg): self.logger.info(msg)
