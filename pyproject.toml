@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [
-  { name = "Semion Tchetovsky" }
+  { name = "SemionTche" }
 ]
 dependencies = []
 keywords = ["logging", "laplace", "utilities"]
