@@ -1,8 +1,65 @@
-import json
+# libraries
+import sys
 
-def json_style(d: dict) -> str:
-    '''Return a pretty-printed JSON string of a dictionary for logging.'''
-    try:
-        return json.dumps(d, indent=4, sort_keys=True, default=str)
-    except Exception as e:
-        return str(d)  # fallback if object is not JSON serializable
+
+# singleton instance (app logger)
+_logger_instance = None
+
+def set_logger_instance(logger):
+    '''set the app logger'''
+    global _logger_instance
+    _logger_instance = logger
+
+def get_logger_instance():
+    '''get the app logger'''
+    return _logger_instance
+
+
+def log_func(msg, level="info"):
+    '''Log function used to make logs in app logger.'''
+    global _logger_instance
+    if _logger_instance is None:
+        raise RuntimeError("Logger not initialized! Call LoggerLHC(app_name, ...) first.")
+    
+    level = level.lower()
+    if level == "debug":
+        _logger_instance.debug(msg)
+    elif level == "warning":
+        _logger_instance.warning(msg)
+    elif level == "error":
+        _logger_instance.error(msg)
+    else:
+        _logger_instance.info(msg)
+
+
+class LogHelper:
+    '''Helper class giving a shortcut to app logger.'''
+    def info(self, msg): log_func(msg, level="info")
+    def debug(self, msg): log_func(msg, level="debug")
+    def warning(self, msg): log_func(msg, level="warning")
+    def error(self, msg): log_func(msg, level="error")
+
+
+class StreamToLogger:
+    '''Helper class redirecting the Python stream (prints) to the 'logger' gave in argument.'''
+    
+    def __init__(self, logger, stream=None):
+        self.logger = logger
+        self.stream = stream or sys.__stdout__  # original stdout/stderr
+    
+    def write(self, message):
+        message = message.rstrip()
+        if not message:
+            return
+        
+        # Write to the original console
+        if self.stream:
+            self.stream.write(message + "\n")
+            self.stream.flush()
+        
+        # add the print the logger logs
+        self.logger.info(message)
+    
+    def flush(self):
+        if self.stream:
+            self.stream.flush()
