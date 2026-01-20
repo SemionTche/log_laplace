@@ -1,8 +1,8 @@
-# log_laplace
+# laplace_log
 
 A **small, opinionated logging helper** built on top of Python’s standard `logging` module.
 
-`log_laplace` is designed for **multi-module / multi-process scientific or application projects** where you want:
+`laplace_log` is designed for **multi-module / multi-process scientific or application projects** where you want:
 
 - One **central logger initialization**
 - Logs from **your app + third‑party libraries**
@@ -29,7 +29,7 @@ No magic, no external dependencies — just structured, predictable logging.
 
 ## Installation
 
-Copy the `log_laplace` folder into your project or install it as a local package.
+Copy the `laplace_log` folder into your project or install it as a local package.
 
 ```bash
 pip install -e .
@@ -44,7 +44,7 @@ pip install -e .
 ### 1. Initialize the logger **once** (entry point)
 
 ```python
-from log_laplace.log_lhc import LoggerLHC, log
+from laplace_log.log_lhc import LoggerLHC, log
 
 LoggerLHC(
     app_name="laplace.opt",
@@ -58,7 +58,7 @@ log.info("Starting OptWindow...")
 ### 2. Use logging anywhere
 
 ```python
-from log_laplace.log_lhc import log
+from laplace_log.log_lhc import log
 
 log.debug("Debug message")
 log.info("Information")
@@ -125,7 +125,7 @@ This name appears in log records and helps identify the source clearly.
 `log` is a lightweight helper object:
 
 ```python
-from log_laplace.log_lhc import log
+from laplace_log.log_lhc import log
 log.info("Hello")
 ```
 
@@ -206,6 +206,6 @@ It is a **thin, explicit convenience layer**.
 
 > *Logging should be boring, explicit, and predictable.*
 
-`log_laplace` exists to remove boilerplate while keeping full control.
+`laplace_log` exists to remove boilerplate while keeping full control.
 
 If you understand Python logging, this library will never surprise you.
