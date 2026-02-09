@@ -65,7 +65,7 @@ class LoggerLHC:
         self.date_folder.mkdir(parents=True, exist_ok=True)
 
         # log file name (replace '.' by '_')
-        self.log_file = self.date_folder / f"{app_name.replace(".", "_")}.log"
+        self.log_file = self.date_folder / f"{app_name.replace('.', '_')}.log"
         
         # making a root logger and setting the level
         self.root_logger = logging.getLogger()

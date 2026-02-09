@@ -184,26 +184,6 @@ LoggerLHC(
 
 ---
 
-## What This Is *Not*
-
-- ❌ A replacement for `logging`
-- ❌ A framework
-- ❌ A distributed logging system
-
-It is a **thin, explicit convenience layer**.
-
----
-
 ## License
 
  GPL-3.0 license
-
----
-
-## Philosophy
-
-> *Logging should be boring, explicit, and predictable.*
-
-`laplace_log` exists to remove boilerplate while keeping full control.
-
-If you understand Python logging, this library will never surprise you.
