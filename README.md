@@ -24,6 +24,7 @@ No magic, no external dependencies — just structured, predictable logging.
 - ✅ `print()` and `stderr` redirection into logs
 - ✅ Simple `log.info(...)` helper available everywhere
 - ✅ Singleton design (initialize once, use everywhere)
+- ✅ Provide an error hook (to avoid silent failures such as PyQt)
 
 ---
 
@@ -42,7 +43,7 @@ pip install laplace-log
 ### 1. Initialize the logger **once** (entry point)
 
 ```python
-from laplace_log.log_lhc import LoggerLHC, log
+from laplace_log import LoggerLHC, log
 
 LoggerLHC(
     app_name="laplace.opt",
@@ -56,7 +57,7 @@ log.info("Starting OptWindow...")
 ### 2. Use logging anywhere
 
 ```python
-from laplace_log.log_lhc import log
+from laplace_log import log
 
 log.debug("Debug message")
 log.info("Information")
@@ -123,7 +124,7 @@ This name appears in log records and helps identify the source clearly.
 `log` is a lightweight helper object:
 
 ```python
-from laplace_log.log_lhc import log
+from laplace_log import log
 log.info("Hello")
 ```
 
@@ -151,6 +152,18 @@ This is useful for:
 - Legacy code
 - Debug prints
 - Third‑party libraries using `print`
+
+---
+
+## Error Hook
+
+To avoid silent errors, an error hook can be loaded:
+
+```python
+from laplace_log import uncaught_exception
+```
+
+This is especially useful for PyQt signal errors.
 
 ---
 
