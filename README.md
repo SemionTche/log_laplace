@@ -24,7 +24,7 @@ No magic, no external dependencies — just structured, predictable logging.
 - ✅ `print()` and `stderr` redirection into logs
 - ✅ Simple `log.info(...)` helper available everywhere
 - ✅ Singleton design (initialize once, use everywhere)
-- ✅ Provide an error hook (to avoid silent failures such as PyQt)
+- ✅ Provide an error hook (to avoid silent failures such as PyQt signals)
 
 ---
 
