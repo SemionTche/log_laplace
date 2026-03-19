@@ -157,13 +157,13 @@ This is useful for:
 
 ## Error Hook
 
-To avoid silent errors, an error hook can be loaded:
+To avoid silent failures, an error hook can be loaded:
 
 ```python
 from laplace_log import uncaught_exception
 ```
 
-This is especially useful for PyQt signal errors.
+This import will by itself make sure that no error will be missed. This is especially useful for PyQt signal errors.
 
 ---
 
